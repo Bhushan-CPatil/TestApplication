@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     public static final String BASE_URL = "http://192.168.43.109:80/flightbooking/";
-    public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
+    public static final String IMAGE_DIRECTORY_NAME = "FTB";
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
 
