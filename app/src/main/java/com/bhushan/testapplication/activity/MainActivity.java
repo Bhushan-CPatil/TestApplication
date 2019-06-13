@@ -1,5 +1,6 @@
 package com.bhushan.testapplication.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private void dologout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
-        builder.setTitle("ILeadByExample");
+        builder.setTitle("Logout ?");
         builder.setMessage("Are you sure wants to Logout ?");
         builder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
@@ -124,6 +126,31 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.profile) {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            Bundle bndlanimation = ActivityOptions.makeCustomAnimation(MainActivity.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
+            startActivity(intent, bndlanimation);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

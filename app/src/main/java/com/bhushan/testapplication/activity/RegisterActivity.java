@@ -527,9 +527,11 @@ public class RegisterActivity extends AppCompatActivity {
             progressDialoge.dismiss();
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                if (!jsonObject.getBoolean("error")) {
+                if (jsonObject.getBoolean("access")) {
                     // showing the server response in an alert dialog
-                    Snackbar.make(rl, jsonObject.getString("errormsg"), Snackbar.LENGTH_LONG).show();
+                    finish();
+                    RegisterActivity.this.overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+                    Toast.makeText(RegisterActivity.this, jsonObject.getString("errormsg"), Toast.LENGTH_LONG).show();
 
                 } else {
                     Snackbar snackbar = Snackbar.make(rl, jsonObject.getString("errormsg"), Snackbar.LENGTH_SHORT);
