@@ -2,9 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+    useLibrary 'org.apache.http.legacy'
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
     defaultConfig {
         applicationId "com.bhushan.testapplication"
-        useLibrary 'org.apache.http.legacy'
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
