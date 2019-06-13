@@ -79,8 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
     public Uri fileUri; // file url to store image/video
 
     public ImageView acpimage;
-    public EditText pimage,name,add,pincode,phno,email,username;
-    public TextInputEditText pass,confpass;
+    public EditText pimage, name, add, pincode, phno, email, username;
+    public TextInputEditText pass, confpass;
     public Button register;
 
     @Override
@@ -105,17 +105,18 @@ public class RegisterActivity extends AppCompatActivity {
         pass = findViewById(R.id.pass);
         confpass = findViewById(R.id.confpass);
         register = findViewById(R.id.register);
-        progressDialoge=new ViewDialog(RegisterActivity.this);
+        progressDialoge = new ViewDialog(RegisterActivity.this);
         goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent = new Intent(RegisterActivity.this, LoginScreen.class);
-                    Bundle bndlanimation = ActivityOptions.makeCustomAnimation(RegisterActivity.this, R.anim.trans_right_in, R.anim.trans_right_out).toBundle();
-                    startActivity(intent, bndlanimation);
-                    finish();
+                Intent intent = new Intent(RegisterActivity.this, LoginScreen.class);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(RegisterActivity.this, R.anim.trans_right_in, R.anim.trans_right_out).toBundle();
+                startActivity(intent, bndlanimation);
+                finish();
             }
         });
 
+        pimage.setFocusable(false);
         pimage.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -165,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                             fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
 
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                            intent.putExtra("return-data",true);
+                            intent.putExtra("return-data", true);
                             // start the image capture Intent
                             //startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
                             startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
@@ -238,10 +239,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Receiving activity result method will be called after closing the camera
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
@@ -255,7 +255,6 @@ public class RegisterActivity extends AppCompatActivity {
                 //todo call crop image method
                 // successfully captured the image
                 // launching upload activity
-
 
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -272,20 +271,20 @@ public class RegisterActivity extends AppCompatActivity {
                         .show();
             }
 
-        }else if(requestCode == 98){
+        } else if (requestCode == 98) {
             //picUri = data.getExtras();
             //Log.d("pic uri 2",picUri.toString());
             if (resultCode == RESULT_OK) {
                 isimgcropped = true;
                 launchUploadActivity(true);
-            } else if(resultCode == RESULT_CANCELED){
+            } else if (resultCode == RESULT_CANCELED) {
                 isimgcropped = false;
                 picUri = fileUri;
                 launchUploadActivity(true);
                 Toast.makeText(getApplicationContext(),
                         "Crop operation canceled !", Toast.LENGTH_SHORT)
                         .show();
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(),
                         "Sorry! Failed to get image !", Toast.LENGTH_SHORT)
                         .show();
@@ -297,14 +296,14 @@ public class RegisterActivity extends AppCompatActivity {
                         "Crop operation canceled !", Toast.LENGTH_SHORT)
                         .show();
             }*/
-        }else if(requestCode == 3){
+        } else if (requestCode == 3) {
             //picUri = data.getExtras();
             //Log.d("pic uri 2",picUri.toString());
             if (resultCode == RESULT_OK) {
                 fileUri = Uri.parse(getRealPathFromURI(fileUri));
                 isimgcropped = true;
                 launchUploadActivity(true);
-            } else if(resultCode == RESULT_CANCELED) {
+            } else if (resultCode == RESULT_CANCELED) {
                 picUri = Uri.parse(getRealPathFromURI(fileUri));
                 fileUri = Uri.parse(getRealPathFromURI(fileUri));
                 isimgcropped = false;
@@ -313,7 +312,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "Crop operation canceled !", Toast.LENGTH_SHORT)
                         .show();
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(),
                         "Sorry! Failed to get image !", Toast.LENGTH_SHORT)
                         .show();
@@ -321,7 +320,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void launchUploadActivity(boolean isImage){
+    private void launchUploadActivity(boolean isImage) {
         //todo write code here
         pimage.setVisibility(View.GONE);
         acpimage.setVisibility(View.VISIBLE);
@@ -397,23 +396,23 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private File createNewFile(){
+    private File createNewFile() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
 
-        String prefix = "CRPIMG_" + Global.username + "_" + timeStamp +".jpg";
+        String prefix = "CRPIMG_" + Global.username + "_" + timeStamp + ".jpg";
 
         File newDirectory = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 RetrofitClient.IMAGE_DIRECTORY_NAME);
-        if(!newDirectory.exists()){
-            if(newDirectory.mkdir()){
+        if (!newDirectory.exists()) {
+            if (newDirectory.mkdir()) {
                 //Log.d(CapNUpVstCard.this.getClass().getName(), newDirectory.getAbsolutePath()+" directory created");
             }
         }
 
-        File file = new File(newDirectory,(prefix));
-        if(file.exists()){
+        File file = new File(newDirectory, (prefix));
+        if (file.exists()) {
             //this wont be executed
             file.delete();
             try {
@@ -429,8 +428,8 @@ public class RegisterActivity extends AppCompatActivity {
     public String getRealPathFromURI(Uri contentUri) {
 
         // can post image
-        String [] proj={MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery( contentUri,
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(contentUri,
                 proj, // Which columns to return
                 null,       // WHERE clause; which rows to return (all rows)
                 null,       // WHERE clause selection arguments (none)
@@ -464,7 +463,7 @@ public class RegisterActivity extends AppCompatActivity {
             String responseString = null;
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(RetrofitClient.BASE_URL+"register.php");
+            HttpPost httppost = new HttpPost(RetrofitClient.BASE_URL + "register.php");
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -477,11 +476,11 @@ public class RegisterActivity extends AppCompatActivity {
                         });
                 //Log.d("file path", filePath);
                 File sourceFile = new File(picUri.getPath());
-                if(!isimgcropped) {
+                if (!isimgcropped) {
                     File compressedImageFile = new Compressor(RegisterActivity.this).compressToFile(sourceFile);
                     // Adding file data to http body
                     entity.addPart("image", new FileBody(compressedImageFile));
-                }else{
+                } else {
                     entity.addPart("image", new FileBody(sourceFile));
                 }
                 // Extra parameters if you want to pass to server
@@ -526,12 +525,11 @@ public class RegisterActivity extends AppCompatActivity {
             progressDialoge.dismiss();
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                if(!jsonObject.getBoolean("error"))
-                {
+                if (!jsonObject.getBoolean("error")) {
                     // showing the server response in an alert dialog
                     Snackbar.make(rl, jsonObject.getString("errormsg"), Snackbar.LENGTH_LONG).show();
 
-                }else{
+                } else {
                     Snackbar snackbar = Snackbar.make(rl, jsonObject.getString("errormsg"), Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 }
@@ -549,28 +547,32 @@ public class RegisterActivity extends AppCompatActivity {
         vibrator.vibrate(100);
 
 
-
 //            Log.d("pass encrypt --->", Global.password);
-            final String usern = username.getText().toString().trim();
-            String na = name.getText().toString().trim();
-            String ad = add.getText().toString().trim();
-            String pin = pincode.getText().toString().trim();
-            String ph = phno.getText().toString().trim();
-            String em = email.getText().toString().trim();
-            String password = pass.getText().toString().trim();
-            String cpassword = confpass.getText().toString().trim();
+        final String usern = username.getText().toString().trim();
+        String na = name.getText().toString().trim();
+        String ad = add.getText().toString().trim();
+        String pin = pincode.getText().toString().trim();
+        String ph = phno.getText().toString().trim();
+        String em = email.getText().toString().trim();
+        String password = pass.getText().toString().trim();
+        String cpassword = confpass.getText().toString().trim();
 
-            if (usern.isEmpty()) {
-                username.setError("User Name is required");
-                username.requestFocus();
+
+        if (pimage.isShown()) {
+            pimage.setError("Upload Image first");
+            pimage.requestFocus();
+            return;
+        }
+
+        if (acpimage.isShown()) {
+            if (acpimage.getDrawable() == null) {
+                acpimage.setVisibility(View.GONE);
+                pimage.setVisibility(View.VISIBLE);
+                pimage.setError("Image not set");
+                pimage.requestFocus();
                 return;
             }
-
-            if (usern.length() < 8) {
-                username.setError("Enter a valid User name");
-                username.requestFocus();
-                return;
-            }
+        }
 
         if (na.isEmpty()) {
             name.setError("Name is required");
@@ -607,8 +609,18 @@ public class RegisterActivity extends AppCompatActivity {
             email.requestFocus();
             return;
         }
+        if (usern.isEmpty()) {
+            username.setError("User Name is required");
+            username.requestFocus();
+            return;
+        }
 
-            if (password.isEmpty()) {
+        if (usern.length() < 8) {
+            username.setError("Enter a valid User name");
+            username.requestFocus();
+            return;
+        }
+        if (password.isEmpty()) {
             pass.setError("Password is required");
             pass.requestFocus();
             return;
@@ -632,13 +644,13 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if(!password.equals(cpassword)){
+        if (!password.equals(cpassword)) {
             confpass.setError("Password not matched");
             confpass.requestFocus();
             return;
         }
 
-            new UploadFileToServer().execute();
+        new UploadFileToServer().execute();
 
     }
 }
