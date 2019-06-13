@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -48,23 +51,33 @@ public class LoginScreen extends AppCompatActivity {
     public TextView newuser;
     ViewDialog progressDialoge;
     boolean allgranted = false;
-    boolean callpermissiongranted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         setContentView(R.layout.activity_login_screen);
+        getSupportActionBar().hide();
         username = findViewById(R.id.uid);
         password = findViewById(R.id.pass);
         login = findViewById(R.id.login);
         rl = findViewById(R.id.rl);
         newuser = findViewById(R.id.newuser);
+        progressDialoge = new ViewDialog(LoginScreen.this);
 
         newuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginScreen.this, RegisterActivity.class);
-                startActivity(intent);
+                    if (allgranted) {
+                        Intent intent = new Intent(LoginScreen.this, RegisterActivity.class);
+                        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(LoginScreen.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
+                        startActivity(intent, bndlanimation);
+                    } else {
+                        requestStoragePermission();
+                    }
             }
         });
 
@@ -85,7 +98,7 @@ public class LoginScreen extends AppCompatActivity {
     public void dologin() {
         Vibrator vibrator = (Vibrator) getSystemService(LoginScreen.this.VIBRATOR_SERVICE);
         vibrator.vibrate(100);
-        if (callpermissiongranted) {
+
             if (allgranted) {
 
 //            Log.d("pass encrypt --->", Global.password);
@@ -156,19 +169,6 @@ public class LoginScreen extends AppCompatActivity {
             } else {
                 requestStoragePermission();
             }
-        } else {
-            Snackbar snackbar = Snackbar
-                    .make(rl, "Field to fetch data !", Snackbar.LENGTH_LONG)
-                    .setAction("Re-Load", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            recreate();
-                        }
-                    });
-
-            snackbar.show();
-        }
-
     }
 
     private void requestStoragePermission() {
