@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.bhushan.testapplication.R;
 import com.bhushan.testapplication.api.RetrofitClient;
-import com.bhushan.testapplication.others.Global;
 import com.bhushan.testapplication.others.ViewDialog;
 import com.bhushan.testapplication.pojo.DefaultResponse;
 import com.bumptech.glide.Glide;
@@ -58,6 +57,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
     ViewDialog progressDialoge;
     public Uri fileUri; // file url to store image/video
 
-    public ImageView acpimage;
+    public CircleImageView acpimage;
     public EditText pimage, name, add, pincode, phno, email, username;
     public TextInputEditText pass, confpass;
     public Button register;
@@ -210,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity {
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + Global.username + "_" + timeStamp + ".jpg");
+                    + "IMG_" + "_" + timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
                     + "VID_" + timeStamp + ".mp4");
@@ -400,7 +400,7 @@ public class RegisterActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
 
-        String prefix = "CRPIMG_" + Global.username + "_" + timeStamp + ".jpg";
+        String prefix = "CRPIMG_" + "_" + timeStamp + ".jpg";
 
         File newDirectory = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -547,7 +547,6 @@ public class RegisterActivity extends AppCompatActivity {
         vibrator.vibrate(100);
 
 
-//            Log.d("pass encrypt --->", Global.password);
         final String usern = username.getText().toString().trim();
         String na = name.getText().toString().trim();
         String ad = add.getText().toString().trim();
