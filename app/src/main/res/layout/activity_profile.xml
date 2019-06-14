@@ -198,6 +198,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/useredit"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/ic_edit"/>
         </LinearLayout>
@@ -232,6 +233,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/passup"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/ic_edit"/>
         </LinearLayout>
