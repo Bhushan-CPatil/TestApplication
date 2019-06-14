@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bhushan.testapplication.R;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ConstraintLayout container;
     Fragment fragment = null;
+    public TextView profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         progress = new ViewDialog(MainActivity.this);
         container = findViewById(R.id.container);
         bottomNavigationView = findViewById(R.id.navigation);
+        profile = findViewById(R.id.profile);
         fragment = new Flight_List();
         loadFragment(fragment);
 
@@ -65,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 return loadFragment(fragment);
             }
 
+        });
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(MainActivity.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
+                startActivity(intent, bndlanimation);
+            }
         });
 
         BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
