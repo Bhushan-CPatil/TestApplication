@@ -19,7 +19,6 @@ public interface Api {
             @Field("password") String password
     );
 
-    @FormUrlEncoded
     @POST("ft_getFlightList.php")
     Call<FlightListRes> flightList();
 }

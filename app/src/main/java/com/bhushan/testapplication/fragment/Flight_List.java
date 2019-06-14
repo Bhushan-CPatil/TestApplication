@@ -43,7 +43,7 @@ public class Flight_List extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_flight__list, container, false);
         progressDialog=new ViewDialog(getActivity());
-        rv_list = view.findViewById(R.id.rv_history);
+        rv_list = view.findViewById(R.id.rv_flight);
         listview = view.findViewById(R.id.l2);
         ErrorView = view.findViewById(R.id.l1);
         rv_list.setNestedScrollingEnabled(false);
@@ -53,7 +53,7 @@ public class Flight_List extends Fragment {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                View view=LayoutInflater.from(getActivity()).inflate(R.layout.history_adapter, viewGroup,false);
+                View view=LayoutInflater.from(getActivity()).inflate(R.layout.flight_list_adapter, viewGroup,false);
                 Holder holder=new Holder(view);
                 return holder;
             }
@@ -67,6 +67,7 @@ public class Flight_List extends Fragment {
                 myHolder.to.setText(model.getFTO());
                 myHolder.arrival.setText(model.getARRIVAL());
                 myHolder.depar.setText(model.getDEPARTURE());
+                myHolder.cost.setText("₹. : "+model.getECOST());
                 myHolder.itemView.setTag(i);
 
                         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +111,6 @@ public class Flight_List extends Fragment {
         );
 
         getHistList();
-
-
-
         return view;
     }
 
