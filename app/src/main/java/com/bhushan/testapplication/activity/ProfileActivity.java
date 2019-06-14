@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -12,13 +13,20 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bhushan.testapplication.R;
+import com.bhushan.testapplication.api.RetrofitClient;
 import com.bhushan.testapplication.others.Global;
 import com.bhushan.testapplication.others.ViewDialog;
+import com.bhushan.testapplication.pojo.DefaultResponse;
 import com.bumptech.glide.Glide;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -26,11 +34,13 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView useredit,passup;
     CircleImageView profilepic;
     ViewDialog progressDialoge;
+    EditText usernamepop;
+    EditText oldpass,newpass,confnewpass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         name = findViewById(R.id.name);
         address = findViewById(R.id.address);
         pincode = findViewById(R.id.pincode);
@@ -60,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         passup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                changePasswordPopup();
             }
         });
     }
@@ -74,19 +84,18 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.change_username);
         CardView buttonNo = dialog.findViewById(R.id.no);
         CardView buttonYes = dialog.findViewById(R.id.yes);
-        final EditText username = dialog.findViewById(R.id.username);
+        usernamepop = dialog.findViewById(R.id.username);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUserName(username.getText().toString().trim(),dialog);
-               // dialog.dismiss();
+                dialog.dismiss();
             }
         });
         buttonYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
-                dialog.dismiss();
+                updateUserName(usernamepop.getText().toString().trim(),dialog);
+                //dialog.dismiss();
             }
         });
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -97,19 +106,41 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void updateUserName(String usern,Dialog dialog) {
+    private void updateUserName(final String usern, final Dialog dialog) {
         if (usern.isEmpty()) {
-            username.setError("User Name is required");
-            username.requestFocus();
+            usernamepop.setError("User Name is required");
+            usernamepop.requestFocus();
             return;
         }
 
         if (usern.length() < 8) {
-            username.setError("Enter a valid User name");
-            username.requestFocus();
+            usernamepop.setError("Enter a valid User name");
+            usernamepop.requestFocus();
             return;
         }
 
+        progressDialoge.show();
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().ft_changeUsername(Global.uid,usern);
+        call.enqueue(new Callback<DefaultResponse>() {
+            @Override
+            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                progressDialoge.dismiss();
+                DefaultResponse res =response.body();
+                if(res.isAccess()){
+                    Global.username = usern;
+                    username.setText(Global.username);
+                    dialog.dismiss();
+                }else {
+                    Toast.makeText(ProfileActivity.this, res.getErrormsg(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+                progressDialoge.dismiss();
+                Toast.makeText(ProfileActivity.this, "Something went wrong !", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void changePasswordPopup() {
@@ -120,21 +151,21 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.change_password);
         CardView buttonNo = dialog.findViewById(R.id.no);
         CardView buttonYes = dialog.findViewById(R.id.yes);
-        final EditText oldpass = dialog.findViewById(R.id.oldpass);
-        final EditText newpass = dialog.findViewById(R.id.newpass);
-        final EditText confnewpass = dialog.findViewById(R.id.confnewpass);
+        oldpass = dialog.findViewById(R.id.oldpass);
+        newpass = dialog.findViewById(R.id.newpass);
+        confnewpass = dialog.findViewById(R.id.confnewpass);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changePassword(oldpass.getText().toString().trim(),newpass.getText().toString().trim(),confnewpass.getText().toString().trim(),dialog);
-                // dialog.dismiss();
+                dialog.dismiss();
             }
         });
         buttonYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                changePassword(oldpass.getText().toString().trim(),newpass.getText().toString().trim(),confnewpass.getText().toString().trim(),dialog);
+                // dialog.dismiss();
 
-                dialog.dismiss();
             }
         });
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -145,36 +176,85 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void changePassword(String oldpass,String newpass,String confnewpass,Dialog dialog) {
-        if (oldpass.isEmpty()) {
+    private void changePassword(String oldpass1, String newpass1, String confnewpass1, final Dialog dialog) {
+        if (oldpass1.isEmpty()) {
+            oldpass.setError("Old password is required");
+            oldpass.requestFocus();
             return;
         }
 
-        if (oldpass.length() < 8) {
+        if (oldpass1.length() < 8) {
+            oldpass.setError("Old password is to short");
+            oldpass.requestFocus();
             return;
         }
 
-        if (newpass.isEmpty()) {
+        if (newpass1.isEmpty()) {
+            newpass.setError("New password is required");
+            newpass.requestFocus();
             return;
         }
 
-        if (newpass.length() < 8) {
+        if (newpass1.length() < 8) {
+            newpass.setError("New password is to short");
+            newpass.requestFocus();
             return;
         }
 
-        if (confnewpass.isEmpty()) {
+        if (confnewpass1.isEmpty()) {
+            confnewpass.setError("Confirm password is required");
+            confnewpass.requestFocus();
             return;
         }
 
-        if (confnewpass.length() < 8) {
+        if (confnewpass1.length() < 8) {
+            confnewpass.setError("Confirm password is to short");
+            confnewpass.requestFocus();
             return;
         }
 
-        if (!newpass.equals(confnewpass)) {
+        if (!newpass1.equals(confnewpass1)) {
+            confnewpass.setError("Confirm password not matched");
+            confnewpass.requestFocus();
             return;
         }
 
+        progressDialoge.show();
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().ft_updatePass(Global.uid,confnewpass1,oldpass1);
+        call.enqueue(new Callback<DefaultResponse>() {
+            @Override
+            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                progressDialoge.dismiss();
+                DefaultResponse res =response.body();
+                if(res.isAccess()){
+                    dialog.dismiss();
+                    Toast.makeText(ProfileActivity.this, "Password changed successfully", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(ProfileActivity.this, res.getErrormsg(), Toast.LENGTH_LONG).show();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+                progressDialoge.dismiss();
+                Toast.makeText(ProfileActivity.this, "Something went wrong !", Toast.LENGTH_LONG).show();
+            }
+        });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        } return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        ProfileActivity.this.overridePendingTransition(R.anim.trans_right_in,R.anim.trans_right_out);
     }
 }

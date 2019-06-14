@@ -141,7 +141,14 @@ public class LoginScreen extends AppCompatActivity {
                         progressDialoge.dismiss();
 
                         if (dResponse.isAccess()) {
-
+                            String[] bind = dResponse.getErrormsg().split("~");
+                            Global.uid=bind[0];
+                            Global.name=bind[1];
+                            Global.address=bind[2];
+                            Global.pincode=bind[3];
+                            Global.phno=bind[4];
+                            Global.email=bind[5];
+                            Global.picpath=bind[6];
                             Intent intent = new Intent(LoginScreen.this, MainActivity.class);
                             Global.username = username.getText().toString().trim();
                             Bundle bndlanimation = ActivityOptions.makeCustomAnimation(LoginScreen.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();

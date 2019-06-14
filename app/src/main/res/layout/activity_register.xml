@@ -126,7 +126,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:drawableLeft="@drawable/ic_home"
+                android:drawableLeft="@drawable/ic_home_address"
                 android:drawablePadding="15dp"
                 android:maxLength="200"
                 android:drawableTint="@color/colorPrimary"
