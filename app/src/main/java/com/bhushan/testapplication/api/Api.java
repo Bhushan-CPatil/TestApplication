@@ -2,6 +2,7 @@ package com.bhushan.testapplication.api;
 
 
 import com.bhushan.testapplication.pojo.DefaultResponse;
+import com.bhushan.testapplication.pojo.FlightListRes;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -17,4 +18,8 @@ public interface Api {
             @Field("username") String username,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("ft_getFlightList.php")
+    Call<FlightListRes> flightList();
 }
