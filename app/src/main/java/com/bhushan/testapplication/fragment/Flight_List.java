@@ -67,7 +67,7 @@ public class Flight_List extends Fragment {
                 myHolder.to.setText(model.getFTO());
                 myHolder.arrival.setText(model.getARRIVAL());
                 myHolder.depar.setText(model.getDEPARTURE());
-                myHolder.cost.setText("₹. : "+model.getECOST());
+                myHolder.cost.setText("₹. "+model.getECOST());
                 myHolder.itemView.setTag(i);
 
                         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
