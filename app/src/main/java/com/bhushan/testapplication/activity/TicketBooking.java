@@ -3,12 +3,23 @@ package com.bhushan.testapplication.activity;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bhushan.testapplication.R;
+import com.bhushan.testapplication.pojo.FormElementsItem;
+import com.bhushan.testapplication.pojo.FormList;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicketBooking extends AppCompatActivity {
 
@@ -18,6 +29,7 @@ public class TicketBooking extends AppCompatActivity {
     int totprice,totalseats,amount;
     int minteger = 1;
     String s;
+    List<FormElementsItem> formlistelm = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +100,19 @@ public class TicketBooking extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int noofcards = Integer.parseInt(qty.getText().toString().trim());
+                String jsnstr = "{\"FormElements\" : [";
+                for(int k = 0 ; k<noofcards; k++){
+                    if(k==0){
+                        jsnstr += "{\"name\" : \"\",\"gender\" : \"\",\"age\" : \"\",\"mobileno\" : \"\"}";
+                    }else{
+                        jsnstr += ",{\"name\" : \"\",\"gender\" : \"\",\"age\" : \"\",\"mobileno\" : \"\"}";
+                    }
+                }
+                jsnstr += "]}";
+                Gson gson = new Gson();
+                FormList nameList = gson.fromJson(jsnstr, FormList.class);
+                formlistelm = nameList.getFormElements();
             }
         });
 

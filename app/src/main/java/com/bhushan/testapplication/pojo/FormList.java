@@ -1,61 +1,26 @@
 package com.bhushan.testapplication.pojo;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class FormList{
 
-	@SerializedName("gender")
-	private String gender;
+	@SerializedName("FormElements")
+	private List<FormElementsItem> formElements;
 
-	@SerializedName("name")
-	private String name;
-
-	@SerializedName("mobileno")
-	private String mobileno;
-
-	@SerializedName("age")
-	private String age;
-
-	public void setGender(String gender){
-		this.gender = gender;
+	public void setFormElements(List<FormElementsItem> formElements){
+		this.formElements = formElements;
 	}
 
-	public String getGender(){
-		return gender;
-	}
-
-	public void setName(String name){
-		this.name = name;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public void setMobileno(String mobileno){
-		this.mobileno = mobileno;
-	}
-
-	public String getMobileno(){
-		return mobileno;
-	}
-
-	public void setAge(String age){
-		this.age = age;
-	}
-
-	public String getAge(){
-		return age;
+	public List<FormElementsItem> getFormElements(){
+		return formElements;
 	}
 
 	@Override
  	public String toString(){
 		return 
 			"FormList{" + 
-			"gender = '" + gender + '\'' + 
-			",name = '" + name + '\'' + 
-			",mobileno = '" + mobileno + '\'' + 
-			",age = '" + age + '\'' + 
+			"formElements = '" + formElements + '\'' + 
 			"}";
 		}
 }
