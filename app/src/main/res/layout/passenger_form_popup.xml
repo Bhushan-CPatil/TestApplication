@@ -63,7 +63,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/textcolorwhite"
                     android:layout_gravity="center"
-                    android:text="SUBMIT"/>
+                    android:text="BOOK TICKET"/>
 
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
