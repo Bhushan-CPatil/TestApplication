@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -57,7 +58,7 @@ public class TicketBooking extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_booking);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         date = findViewById(R.id.date);
         from = findViewById(R.id.from);
         to = findViewById(R.id.to);
@@ -284,5 +285,20 @@ public class TicketBooking extends AppCompatActivity {
         Gson gson = new GsonBuilder().create();
         JsonArray myCustomArray = gson.toJsonTree(formlistelm).getAsJsonArray();
         //todo call Api and dismiss dialog
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        } return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        TicketBooking.this.overridePendingTransition(R.anim.trans_right_in,R.anim.trans_right_out);
     }
 }
