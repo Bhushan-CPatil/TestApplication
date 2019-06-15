@@ -21,9 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.TicketBooking"></activity>
-        <activity android:name=".activity.ProfileActivity"
-            android:label="Profile"/>
+        <activity android:name=".activity.TicketSummary"></activity>
+        <activity android:name=".activity.TicketBooking" />
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:label="Profile" />
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.LoginScreen" />
         <activity android:name=".activity.SplashScreen">

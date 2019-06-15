@@ -3,8 +3,10 @@ package com.bhushan.testapplication.activity;
 import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
@@ -29,6 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhushan.testapplication.R;
+import com.bhushan.testapplication.api.RetrofitClient;
+import com.bhushan.testapplication.fragment.Flight_List;
+import com.bhushan.testapplication.others.Global;
+import com.bhushan.testapplication.others.ViewDialog;
+import com.bhushan.testapplication.pojo.DefaultResponse;
 import com.bhushan.testapplication.pojo.FormElementsItem;
 import com.bhushan.testapplication.pojo.FormList;
 import com.google.gson.Gson;
@@ -45,20 +52,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TicketBooking extends AppCompatActivity {
 
     TextView date,from,to,arrival,depar,cost,airline,modelname,totseats,duration,qty,price;
     ImageView minus,plus;
     Button next;
     int totprice,totalseats,amount;
-    int minteger = 1;
-    String s;
+    ViewDialog progressDialog;
+    int minteger = 1,position;
+    String s,fid;
     List<FormElementsItem> formlistelm = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_booking);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        progressDialog=new ViewDialog(TicketBooking.this);
         date = findViewById(R.id.date);
         from = findViewById(R.id.from);
         to = findViewById(R.id.to);
@@ -85,6 +98,8 @@ public class TicketBooking extends AppCompatActivity {
         modelname.setText(getIntent().getStringExtra("fMODEL"));
         totseats.setText(getIntent().getStringExtra("tOTSEAT"));
         duration.setText(getIntent().getStringExtra("f_DURATION"));
+        fid =getIntent().getStringExtra("fID");
+        position = Integer.parseInt(getIntent().getStringExtra("position"));
         qty.setText(""+minteger);
         totalseats = Integer.parseInt(getIntent().getStringExtra("tOTSEAT"));
         amount = Integer.parseInt(getIntent().getStringExtra("eCOST"));
@@ -101,7 +116,6 @@ public class TicketBooking extends AppCompatActivity {
                     s = String.valueOf(cal2);
                     price.setText("Total Price: ₹ "+s);
                 }
-
             }
         });
         minus.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +131,6 @@ public class TicketBooking extends AppCompatActivity {
                 else {
                     qty.setText("1");
                 }
-
             }
         });
 
@@ -203,8 +216,10 @@ public class TicketBooking extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked) {
                             model.setGender("Male");
+                            rowViewHolder.female.setChecked(false);
                         }else{
-                            model.setGender("");
+                            model.setGender("Female");
+                            rowViewHolder.female.setChecked(true);
                         }
                     }
                 });
@@ -214,8 +229,10 @@ public class TicketBooking extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked) {
                             model.setGender("Female");
+                            rowViewHolder.male.setChecked(false);
                         }else{
-                            model.setGender("");
+                            model.setGender("Male");
+                            rowViewHolder.male.setChecked(true);
                         }
                     }
                 });
@@ -244,6 +261,7 @@ public class TicketBooking extends AppCompatActivity {
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                recyclerView.clearFocus();
                 formlistelm.clear();
                 dialog.dismiss();
             }
@@ -264,19 +282,19 @@ public class TicketBooking extends AppCompatActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void bookTicket(Dialog dialog) {
+    private void bookTicket(final Dialog dialog) {
         for (int i=0;i<formlistelm.size();i++){
             FormElementsItem chk = formlistelm.get(i);
-            if(chk.getName().isEmpty()){
+            if(chk.getName() != null && chk.getName().equalsIgnoreCase("")){
                 Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
                 return;
-            }else if(chk.getAge().isEmpty()){
+            }else if(chk.getAge() != null && chk.getAge().equalsIgnoreCase("")){
                 Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
                 return;
-            }else if(chk.getMobno().isEmpty()){
+            }else if(chk.getMobno() != null && chk.getMobno().equalsIgnoreCase("")){
                 Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
                 return;
-            }else if(chk.getGender().isEmpty()){
+            }else if(chk.getGender() != null && chk.getGender().equalsIgnoreCase("")){
                 Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -285,6 +303,48 @@ public class TicketBooking extends AppCompatActivity {
         Gson gson = new GsonBuilder().create();
         JsonArray myCustomArray = gson.toJsonTree(formlistelm).getAsJsonArray();
         //todo call Api and dismiss dialog
+        progressDialog.show();
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().ft_addEntryInDB(Global.uid,fid,myCustomArray.toString());
+        call.enqueue(new Callback<DefaultResponse>() {
+            @Override
+            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                progressDialog.dismiss();
+                final DefaultResponse res = response.body();
+                dialog.dismiss();
+                if(res.isAccess()){
+                    if(!res.getErrormsg().equalsIgnoreCase("")){
+                        int ogseat = Integer.parseInt(totseats.getText().toString());
+                        int bookedseat = Integer.parseInt(qty.getText().toString());
+                        String calseats = Integer.toString(ogseat-bookedseat);
+                        totseats.setText(calseats);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(TicketBooking.this);
+                        builder.setCancelable(false);
+                        builder.setTitle("Success.");
+                        builder.setMessage("Click next to view summary ?");
+                        builder.setPositiveButton("NEXT", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(TicketBooking.this,TicketSummary.class);
+                                intent.putExtra("tcode", res.getErrormsg());
+                                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(TicketBooking.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
+                                startActivity(intent, bndlanimation);
+                            }
+                        });
+                        AlertDialog dialogx = builder.create();
+                        dialogx.show();
+                    }else{
+                        Toast.makeText(TicketBooking.this, "Something went wrong !", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(TicketBooking.this, "Something went wrong !", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

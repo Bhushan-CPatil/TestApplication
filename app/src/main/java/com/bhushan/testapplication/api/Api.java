@@ -34,6 +34,14 @@ public interface Api {
             @Field("oldpass") String oldpass
     );
 
+    @FormUrlEncoded
+    @POST("ft_addEntryInDB.php")
+    Call<DefaultResponse> ft_addEntryInDB(
+            @Field("uid") String uid,
+            @Field("fid") String fid,
+            @Field("jsonstr") String jsonstr
+    );
+
     @POST("ft_getFlightList.php")
     Call<FlightListRes> flightList();
 }

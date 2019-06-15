@@ -1,5 +1,6 @@
 package com.bhushan.testapplication.fragment;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bhushan.testapplication.R;
+import com.bhushan.testapplication.activity.LoginScreen;
 import com.bhushan.testapplication.activity.TicketBooking;
 import com.bhushan.testapplication.api.RetrofitClient;
 import com.bhushan.testapplication.others.ViewDialog;
@@ -33,8 +35,8 @@ public class Flight_List extends Fragment {
 
     View view;
     ViewDialog progressDialog;
-    RecyclerView rv_list;
-    List<FlightlistItem> flightlist = new ArrayList<>();
+    public static RecyclerView rv_list;
+    public static List<FlightlistItem> flightlist = new ArrayList<>();
     LinearLayout listview , ErrorView;
 
     @Override
@@ -59,7 +61,7 @@ public class Flight_List extends Fragment {
             }
 
             @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
                 final Holder myHolder= (Holder) viewHolder;
                 final FlightlistItem model = flightlist.get(i);
                 myHolder.date.setText("Date : " + model.getFDATE());
@@ -74,6 +76,7 @@ public class Flight_List extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), TicketBooking.class);
+                        intent.putExtra("position", Integer.toString(i));
                         intent.putExtra("fID", model.getFID());
                         intent.putExtra("aRRIVAL", model.getARRIVAL());
                         intent.putExtra("dEPARTURE", model.getDEPARTURE());
@@ -86,7 +89,8 @@ public class Flight_List extends Fragment {
                         intent.putExtra("bCOST", model.getBCOST());
                         intent.putExtra("tOTSEAT", model.getTOTSEAT());
                         intent.putExtra("fNAME", model.getFNAME());
-                        startActivity(intent);
+                        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
+                        startActivity(intent, bndlanimation);
                     }
                 });
 

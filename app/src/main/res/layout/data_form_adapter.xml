@@ -101,7 +101,6 @@
                 android:layout_weight="1"
                 android:id="@+id/male"
                 android:text="Male"
-                android:checked="true"
                 android:textSize="14sp"
                 android:textColor="@color/textcolorwhite"
                 android:gravity="center"
