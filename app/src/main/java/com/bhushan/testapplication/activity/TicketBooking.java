@@ -167,7 +167,35 @@ public class TicketBooking extends AppCompatActivity {
                 final Holder rowViewHolder= (Holder) viewHolder;
                 final FormElementsItem model = formlistelm.get(i);
 
+                rowViewHolder.name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        if (!hasFocus) {
+                            model.setName(rowViewHolder.name.getText().toString());
+                        }
 
+                    }
+                });
+
+                rowViewHolder.age.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        if (!hasFocus) {
+                            model.setAge(rowViewHolder.age.getText().toString());
+                        }
+
+                    }
+                });
+
+                rowViewHolder.phno.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        if (!hasFocus) {
+                            model.setMobno(rowViewHolder.phno.getText().toString());
+                        }
+
+                    }
+                });
 
                 rowViewHolder.male.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -215,6 +243,7 @@ public class TicketBooking extends AppCompatActivity {
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                formlistelm.clear();
                 dialog.dismiss();
             }
         });
@@ -222,11 +251,8 @@ public class TicketBooking extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 recyclerView.clearFocus();
-                Gson gson = new GsonBuilder().create();
-                JsonArray myCustomArray = gson.toJsonTree(formlistelm).getAsJsonArray();
-                //Toast.makeText(getActivity(), myCustomArray.toString(), Toast.LENGTH_LONG).show();
-                bookTicket(myCustomArray.toString());
-                dialog.dismiss();
+                bookTicket(dialog);
+                //dialog.dismiss();
             }
         });
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -237,6 +263,26 @@ public class TicketBooking extends AppCompatActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void bookTicket(String toString) {
+    private void bookTicket(Dialog dialog) {
+        for (int i=0;i<formlistelm.size();i++){
+            FormElementsItem chk = formlistelm.get(i);
+            if(chk.getName().isEmpty()){
+                Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
+                return;
+            }else if(chk.getAge().isEmpty()){
+                Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
+                return;
+            }else if(chk.getMobno().isEmpty()){
+                Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
+                return;
+            }else if(chk.getGender().isEmpty()){
+                Toast.makeText(TicketBooking.this, "Form is incomplete please fill form completetyly", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        Gson gson = new GsonBuilder().create();
+        JsonArray myCustomArray = gson.toJsonTree(formlistelm).getAsJsonArray();
+        //todo call Api and dismiss dialog
     }
 }
