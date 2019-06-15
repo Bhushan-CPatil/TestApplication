@@ -1,11 +1,28 @@
 package com.bhushan.testapplication.activity;
 
+import android.app.ActivityOptions;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,12 +31,18 @@ import com.bhushan.testapplication.R;
 import com.bhushan.testapplication.pojo.FormElementsItem;
 import com.bhushan.testapplication.pojo.FormList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TicketBooking extends AppCompatActivity {
 
@@ -113,8 +136,107 @@ public class TicketBooking extends AppCompatActivity {
                 Gson gson = new Gson();
                 FormList nameList = gson.fromJson(jsnstr, FormList.class);
                 formlistelm = nameList.getFormElements();
+                
+                openPopup();
             }
         });
 
+    }
+
+    private void openPopup() {
+        final Dialog dialog = new Dialog(TicketBooking.this);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.passenger_form_popup);
+        CardView buttonNo = dialog.findViewById(R.id.no);
+        CardView buttonYes = dialog.findViewById(R.id.yes);
+        final RecyclerView recyclerView = dialog.findViewById(R.id.passengerpopuplist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(TicketBooking.this));
+        recyclerView.setAdapter(new RecyclerView.Adapter() {
+            @NonNull
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view= LayoutInflater.from(TicketBooking.this).inflate(R.layout.data_form_adapter, viewGroup,false);
+                Holder holder=new Holder(view);
+                return holder;
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final Holder rowViewHolder= (Holder) viewHolder;
+                final FormElementsItem model = formlistelm.get(i);
+
+
+
+                rowViewHolder.male.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            model.setGender("Male");
+                        }else{
+                            model.setGender("");
+                        }
+                    }
+                });
+
+                rowViewHolder.female.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            model.setGender("Female");
+                        }else{
+                            model.setGender("");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public int getItemCount() {
+                return formlistelm.size();
+            }
+            class Holder extends RecyclerView.ViewHolder {
+                public EditText name,age,phno;
+                public CheckBox male,female;
+
+                public Holder(@NonNull View itemView) {
+                    super(itemView);
+                    name = itemView.findViewById(R.id.name);
+                    phno = itemView.findViewById(R.id.phno);
+                    age = itemView.findViewById(R.id.age);
+                    male = itemView.findViewById(R.id.male);
+                    female = itemView.findViewById(R.id.female);
+                }
+            } }
+        );
+
+        recyclerView.getAdapter().notifyDataSetChanged();
+        buttonNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        buttonYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.clearFocus();
+                Gson gson = new GsonBuilder().create();
+                JsonArray myCustomArray = gson.toJsonTree(formlistelm).getAsJsonArray();
+                //Toast.makeText(getActivity(), myCustomArray.toString(), Toast.LENGTH_LONG).show();
+                bookTicket(myCustomArray.toString());
+                dialog.dismiss();
+            }
+        });
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    private void bookTicket(String toString) {
     }
 }
