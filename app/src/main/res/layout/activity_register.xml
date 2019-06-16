@@ -97,6 +97,9 @@
 
             <EditText
                 android:id="@+id/name"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/add"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -121,6 +124,9 @@
 
             <EditText
                 android:id="@+id/add"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/pincode"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -145,6 +151,9 @@
 
             <EditText
                 android:id="@+id/pincode"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/phno"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -169,6 +178,9 @@
 
             <EditText
                 android:id="@+id/phno"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/email"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -193,6 +205,9 @@
 
             <EditText
                 android:id="@+id/email"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/username"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -217,6 +232,9 @@
 
             <EditText
                 android:id="@+id/username"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/pass"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -259,6 +277,9 @@
                     android:drawableTint="@color/colorPrimary"
                     android:inputType="textPassword"
                     android:id="@+id/pass"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/confpass"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!+-*/_:;="
                     android:paddingLeft="14dp"
                     android:paddingTop="12dp"
@@ -294,6 +315,9 @@
                     android:drawableTint="@color/colorPrimary"
                     android:inputType="textPassword"
                     android:id="@+id/confpass"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/register"
                     android:paddingLeft="14dp"
                     android:paddingTop="12dp"
                     android:paddingRight="12dp"

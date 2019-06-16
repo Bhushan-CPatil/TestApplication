@@ -12,6 +12,9 @@
         android:orientation="vertical">
         <EditText
             android:id="@+id/name"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/age"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,6 +39,9 @@
 
         <EditText
             android:id="@+id/age"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/phno"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -60,6 +66,9 @@
 
         <EditText
             android:id="@+id/phno"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/male"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -101,6 +110,9 @@
                 android:layout_weight="1"
                 android:id="@+id/male"
                 android:text="Male"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/female"
                 android:textSize="14sp"
                 android:textColor="@color/textcolorwhite"
                 android:gravity="center"

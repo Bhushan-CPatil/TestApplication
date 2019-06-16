@@ -21,14 +21,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.TicketSummary"></activity>
-        <activity android:name=".activity.TicketBooking" />
+        <activity android:name=".activity.TicketSummary"
+            android:label="Summary"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.TicketBooking"
+            android:label="Ticket Booking"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ProfileActivity"
-            android:label="Profile" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.LoginScreen" />
-        <activity android:name=".activity.SplashScreen">
+            android:label="Profile"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.LoginScreen"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
