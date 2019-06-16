@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         passup = findViewById(R.id.passup);
         profilepic = findViewById(R.id.profilepic);
         progressDialoge = new ViewDialog(ProfileActivity.this);
-
+        address.setMovementMethod(new ScrollingMovementMethod());
         name.setText(Global.name);
         address.setText(Global.address);
         pincode.setText(Global.pincode);
@@ -59,6 +61,48 @@ public class ProfileActivity extends AppCompatActivity {
         phno.setText(Global.phno);
         username.setText(Global.username);
         Glide.with(this).load(Global.picpath).into(profilepic);
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.name);
+            }
+        });
+
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.address);
+            }
+        });
+
+        pincode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.pincode);
+            }
+        });
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.email);
+            }
+        });
+
+        phno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.phno);
+            }
+        });
+
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCloseType(ProfileActivity.this,Global.username);
+            }
+        });
 
         useredit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +285,30 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void dialogCloseType(final Context context, String stringmsg) {
+        final Dialog dialog = new Dialog(context);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_edit_item);
+        TextView textView = dialog.findViewById(R.id.tvTitle);
+        AppCompatButton bPositive = dialog.findViewById(R.id.bPositive);
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        textView.setText(stringmsg);
+        bPositive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 
     @Override

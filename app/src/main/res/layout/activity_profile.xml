@@ -73,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
                 android:layout_marginLeft="20dp"
+                android:scrollbars = "vertical"
                 android:textColor="@color/textcolordarkgray"
                 android:textSize="18sp"
                 android:id="@+id/address"

@@ -326,6 +326,7 @@ public class TicketBooking extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(TicketBooking.this,TicketSummary.class);
+                                intent.putExtra("uid", Global.uid);
                                 intent.putExtra("tcode", res.getErrormsg());
                                 Bundle bndlanimation = ActivityOptions.makeCustomAnimation(TicketBooking.this, R.anim.trans_left_in, R.anim.trans_left_out).toBundle();
                                 startActivity(intent, bndlanimation);

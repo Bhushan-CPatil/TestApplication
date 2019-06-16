@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(MainActivity.this,LoginScreen.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(MainActivity.this, R.anim.trans_right_in,R.anim.trans_right_out).toBundle();
+                        startActivity(intent, bndlanimation);
                         finish();
                     }
                 });
